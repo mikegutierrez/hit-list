@@ -7,6 +7,7 @@ const moment = require('moment');
 // TODO: standardize time
 // TODO: Promise.all or better async
 // TODO: break out common functions
+// TODO: catch errors
 
 const scrapeController = {
     getData: (req, res) => {
@@ -66,7 +67,7 @@ const scrapeController = {
                 $('.ad-slot-count').map((idx, elem) => {
                     const listing = {};
                     listing.headliner = $(elem).find('.event-details > h3').text();
-                    listing.support = 'TO DO';
+                    listing.support = 'LIVENATION TO DO';
                     listing.venue = $(elem).find('.event-details > h4 > a > span').text();
                     listing.city = city;
                     listing.state = state;
@@ -79,14 +80,52 @@ const scrapeController = {
                 await instance.exit();
             };
 
-            goldenVoice().then(() => liveNation().then(() => {
-                const sortedOutput = output.sort((a, b) => {
-                    const dateA = moment(a.date);
-                    const dateB = moment(b.date);
-                    return dateA - dateB;
+            async function spaceLand() {
+                // TODO: click .btn-more & scrape
+                // TODO: support 
+                const instance = await phantom.create();
+                const page = await instance.createPage();
+
+                await page.on('onResourceRequested', function (requestData) {
+                    console.info('Requesting', requestData.url);
                 });
-                res.send(sortedOutput);
-            }));
+
+                const status = await page.open('https://www.spacelandpresents.com/events/');
+                const content = await page.property('content');
+
+                let $ = cheerio.load(content);
+
+                $('.list-view-item').map((idx, elem) => {
+                    // TODO: figure out how to get this date in proper format for sorting
+                    const dateFormat = $(elem).find('.list-view-details > .dates').text().substring(4) + ' 2017';
+
+
+                    const listing = {};
+                    listing.headliner = $(elem).find('.list-view-details > .headliners > a').text();
+                    listing.support = 'SPACELAND TO DO';
+                    listing.venue = $(elem).find('.list-view-details > .venue').text();
+                    listing.city = 'Los Angeles';
+                    listing.state = 'CA';
+                    listing.date = dateFormat;
+                    listing.time = 'SPACELAND TO DO';
+                    listing.tickets = $(elem).find('.ticket-price > h3 > a').attr('href');
+                    output.push(listing);
+                });
+
+                await instance.exit();
+            };
+
+            // goldenVoice().then(() => liveNation().then(() => spaceLand().then(() => {
+            //     const sortedOutput = output.sort((a, b) => {
+            //         const dateA = moment(a.date);
+            //         const dateB = moment(b.date);
+            //         return dateA - dateB;
+            //     });
+            //     res.send(sortedOutput);
+            // })));
+            spaceLand().then(() => {
+                res.send(output);
+            });
         });
     }
 };
