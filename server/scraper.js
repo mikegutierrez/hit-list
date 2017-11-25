@@ -2,9 +2,11 @@
 
 const cheerio = require('cheerio');
 const phantom = require('phantom');
+const moment = require('moment');
 
-// TODO: standardize date & time
-// TODO: sort by date & time
+// TODO: standardize time
+// TODO: Promise.all or better async
+// TODO: break out common functions
 
 const scrapeController = {
     getData: (req, res) => {
@@ -33,7 +35,7 @@ const scrapeController = {
                     listing.venue = $(elem).find('.show-info > .venue').text().split(',')[0];
                     listing.city = $(elem).find('.show-info > .venue').text().split(',')[1];
                     listing.state = $(elem).find('.show-info > .venue').text().split(',')[2];
-                    listing.date = $(elem).find('.show-info > .date').text().split(',')[0];
+                    listing.date = moment($(elem).find('.show-info > .date').text().split(',')[0]).format('YYYY-MM-DD');
                     listing.time = $(elem).find('.show-info > .date').text().split(',')[1];
                     listing.tickets = $(elem).find('.bottomshowpart > .wrapbuttonsshows > .buy-ticketlink').attr('href');
                     output.push(listing);
@@ -59,18 +61,18 @@ const scrapeController = {
 
                 const cityState = $('#city > .name > h1').text().split('Shows in ')[1];
                 const city = cityState.split(',')[0];
-                const state = cityState.split(',')[1];
+                const state = cityState.split(',')[1].trim();
 
                 $('.ad-slot-count').map((idx, elem) => {
                     const listing = {};
                     listing.headliner = $(elem).find('.event-details > h3').text();
                     listing.support = 'TO DO';
-                    listing.venue = $(elem).find('.event.details > .venue-link > span').text();
+                    listing.venue = $(elem).find('.event-details > h4 > a > span').text();
                     listing.city = city;
                     listing.state = state;
-                    listing.date = $(elem).find('.event-details > .event-row-date > .event-date').attr('content');
+                    listing.date = moment($(elem).find('.event-details > .event-row-date > .event-date').attr('content')).format('YYYY-MM-DD');
                     listing.time = $(elem).find('.event-details > .event-row-date > .event-day').text().split('@ ')[1];
-                    listing.tickets = 'https://www.livenation.com/' + $(elem).find('.event-details > .event-row-buy > div > a').attr('href');
+                    listing.tickets = 'https://www.livenation.com' + $(elem).find('.event-row-buy > div > a').attr('href');
                     output.push(listing);
                 });
 
@@ -78,8 +80,12 @@ const scrapeController = {
             };
 
             goldenVoice().then(() => liveNation().then(() => {
-                console.log('BIG OL PROMISE  ', output)
-                res.send(output);
+                const sortedOutput = output.sort((a, b) => {
+                    const dateA = moment(a.date);
+                    const dateB = moment(b.date);
+                    return dateA - dateB;
+                });
+                res.send(sortedOutput);
             }));
         });
     }
