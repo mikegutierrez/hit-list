@@ -5,12 +5,9 @@ const phantom = require('phantom');
 
 const scrapeController = {
     getData: (req, res) => {
-        console.log('getData');
         return new Promise((resolve, reject) => {
-            console.log('PROMISE');
             const output = [];
             async function goldenVoice() {
-                console.log('goldenVoice');
                 const instance = await phantom.create();
                 const page = await instance.createPage();
     
@@ -19,14 +16,20 @@ const scrapeController = {
                 });
     
                 const status = await page.open('http://www.goldenvoice.com/shows/');
-                console.log('status:  ', status);
                 const content = await page.property('content');
 
                 let $ = cheerio.load(content);
 
                 $('.in').map((idx, elem) => {
                     const listing = {};
-                    listing.headliner = $(elem).find('.show-info').find('h1').find('a').text();
+                    listing.headliner = $(elem).find('.show-info > h1 > a').text();
+                    listing.support = $(elem).find('.show-info > .support').text();
+                    listing.venue = $(elem).find('.show-info > .venue').text().split(',')[0];
+                    listing.city = $(elem).find('.show-info > .venue').text().split(',')[1];
+                    listing.state = $(elem).find('.show-info > .venue').text().split(',')[2];
+                    listing.date = $(elem).find('.show-info > .date').text().split(',')[0];
+                    listing.time = $(elem).find('.show-info > .date').text().split(',')[1];
+                    listing.tickets = $(elem).find('.bottomshowpart > .wrapbuttonsshows > .buy-ticketlink').attr('href');
                     output.push(listing);
                 });
 
