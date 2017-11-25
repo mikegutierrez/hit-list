@@ -8,6 +8,7 @@ const scrapeController = {
         return new Promise((resolve, reject) => {
             const output = [];
             async function goldenVoice() {
+                // TODO: click .loadmore & scrape
                 const instance = await phantom.create();
                 const page = await instance.createPage();
     
