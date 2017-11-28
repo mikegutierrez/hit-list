@@ -56,6 +56,15 @@ const scrapeController = {
         const city = cityState.split(',')[0];
         const state = cityState.split(',')[1].trim();
 
+        const formatTime = (timeStamp) => {
+          let digits = timeStamp.slice(0, -2);
+          const meridiem = timeStamp.slice(-2);
+
+          if (digits.length === 1) digits += ':00';
+
+          return `${digits} ${meridiem}`;
+        };
+
         $('.ad-slot-count').map((idx, elem) => {
           const listing = {};
           listing.headliner = $(elem).find('.event-details > h3').text();
@@ -64,7 +73,7 @@ const scrapeController = {
           listing.city = city;
           listing.state = state;
           listing.date = moment($(elem).find('.event-details > .event-row-date > .event-date').attr('content')).format('YYYY-MM-DD');
-          listing.time = $(elem).find('.event-details > .event-row-date > .event-day').text().split('@ ')[1];
+          listing.time = formatTime($(elem).find('.event-details > .event-row-date > .event-day').text().split('@ ')[1]);
           listing.tickets = 'https://www.livenation.com' + $(elem).find('.event-row-buy > div > a').attr('href');
           output.push(listing);
         });
