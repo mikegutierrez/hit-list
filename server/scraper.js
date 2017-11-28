@@ -4,10 +4,12 @@ const cheerio = require('cheerio');
 const phantom = require('phantom');
 const moment = require('moment');
 
-// TODO: standardize time
 // TODO: Promise.all or better async
 // TODO: break out common functions
 // TODO: catch errors
+
+// GET NADERLANDER DATE FROM THIS
+// console.log('MOMENT:  ', moment.utc(1504635900).format('YYYY-MM-DD'));
 
 const scrapeController = {
   getData: (req, res) => {
@@ -19,11 +21,10 @@ const scrapeController = {
         const page = await instance.createPage();
 
         await page.on('onResourceRequested', requestData => console.info('Requesting', requestData.url));
+        await page.open('http://www.goldenvoice.com/shows/');
 
-        const status = await page.open('http://www.goldenvoice.com/shows/');
         const content = await page.property('content');
-
-        let $ = cheerio.load(content);
+        const $ = cheerio.load(content);
 
         $('.in').map((idx, elem) => {
           const listing = {};
@@ -46,11 +47,10 @@ const scrapeController = {
         const page = await instance.createPage();
 
         await page.on('onResourceRequested', requestData => console.info('Requesting', requestData.url));
+        await page.open('https://www.livenation.com/cities/89824/los-angeles-ca');
 
-        const status = await page.open('https://www.livenation.com/cities/89824/los-angeles-ca');
         const content = await page.property('content');
-
-        let $ = cheerio.load(content);
+        const $ = cheerio.load(content);
 
         const cityState = $('#city > .name > h1').text().split('Shows in ')[1];
         const city = cityState.split(',')[0];
@@ -59,16 +59,14 @@ const scrapeController = {
         const formatTime = (timeStamp) => {
           let digits = timeStamp.slice(0, -2);
           const meridiem = timeStamp.slice(-2);
-
           if (digits.length === 1) digits += ':00';
-
           return `${digits} ${meridiem}`;
         };
 
         $('.ad-slot-count').map((idx, elem) => {
           const listing = {};
           listing.headliner = $(elem).find('.event-details > h3').text();
-          listing.support = 'LIVENATION TO DO';
+          listing.support = 'Not listed';
           listing.venue = $(elem).find('.event-details > h4 > a > span').text();
           listing.city = city;
           listing.state = state;
@@ -86,11 +84,11 @@ const scrapeController = {
         const page = await instance.createPage();
 
         await page.on('onResourceRequested', requestData => console.info('Requesting', requestData.url));
+        await page.open('https://www.spacelandpresents.com/events/');
 
-        const status = await page.open('https://www.spacelandpresents.com/events/');
         const content = await page.property('content');
-
-        let $ = cheerio.load(content);
+        const $ = cheerio.load(content);
+    
         $('#detail > .detail-view > .list-view > .list-view-item').map((idx, elem) => {
           const listing = {};
           listing.headliner = $(elem).find('.list-view-details > .headliners > a').text();
@@ -113,6 +111,7 @@ const scrapeController = {
           const dateB = moment(b.date);
           return dateA - dateB;
         });
+        console.log('Scrape complete');
         res.send(sortedOutput);
       })));
     });
