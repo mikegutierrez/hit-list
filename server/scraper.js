@@ -24,10 +24,14 @@ const scrapeController = {
 
         // await page.on('onResourceRequested', requestData => console.info('Requesting', requestData.url));
         await page.goto('http://www.goldenvoice.com/shows/');
-        await page.content();
+        
+        const listLength = await page.evaluate((sel) => {
+          return page.getElementsByClassName(sel).length;
+        }, '.show-info > h1 > a');
+        console.log(listLength);
         // const content = await page.content();
         // const $ = cheerio.load(content);
-        console.log('PAGE:  ', page.$('.in'));
+        
         // await page.$('.in').map((elem) => {
         //   const listing = {};
         //   listing.headliner = $(elem).find('.show-info > h1 > a').text();
