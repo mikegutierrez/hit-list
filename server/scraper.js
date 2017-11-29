@@ -4,12 +4,13 @@ const cheerio = require('cheerio');
 const phantom = require('phantom');
 const moment = require('moment');
 
-// TODO: Promise.all or better async
-// TODO: break out common functions
-// TODO: catch errors
-
-// GET NADERLANDER DATE FROM THIS
-// console.log('MOMENT:  ', moment.utc(1504635900).format('YYYY-MM-DD'));
+// const TODO = {
+//   1: 'Promise.all or better async',
+//   2: 'break out common functions',
+//   3: 'catch errors',
+//   4: 'add http://www.nederlanderconcerts.com/events/all to scraper',
+//   5: 'switch from phantom to https://github.com/GoogleChrome/puppeteer',
+// };
 
 const scrapeController = {
   getData: (req, res) => {
@@ -34,7 +35,7 @@ const scrapeController = {
           listing.city = $(elem).find('.show-info > .venue').text().split(',')[1];
           listing.state = $(elem).find('.show-info > .venue').text().split(',')[2].trim();
           listing.date = moment($(elem).find('.show-info > .date').text().split(',')[0]).format('YYYY-MM-DD');
-          listing.time = $(elem).find('.show-info > .date').text().split(',')[1];
+          listing.time = $(elem).find('.show-info > .date').text().split(',')[1].trim().toLowerCase();
           listing.tickets = $(elem).find('.bottomshowpart > .wrapbuttonsshows > .buy-ticketlink').attr('href');
           output.push(listing);
         });
@@ -98,12 +99,24 @@ const scrapeController = {
           listing.state = $(elem).find('.list-view-details > .city-state').text().split(',')[1].trim();
           listing.date = moment($(elem).find('.list-view-details > .times > .start > span').attr('title')).format('YYYY-MM-DD');
           listing.time = moment($(elem).find('.list-view-details > .times > .start > span').attr('title')).format('h:mm a');
-          listing.tickets = $(elem).find('.ticket-price > h3 > a').attr('href');
+          listing.tickets = $(elem).find('.ticket-price > h3 > a').attr('href') || 'Free';
           output.push(listing);
         });
 
         await instance.exit();
       }
+
+      // async function sendSortedData() {
+      //   const sortedOutput = output.sort((a, b) => {
+      //     const dateA = moment(a.date);
+      //     const dateB = moment(b.date);
+      //     return dateA - dateB;
+      //   });
+      //   console.log('Scrape complete');
+      //   res.send(sortedOutput);
+      // }
+
+      // Promise.all([goldenVoice, liveNation, spaceLand, sendSortedData]);
 
       goldenVoice().then(() => liveNation().then(() => spaceLand().then(() => {
         const sortedOutput = output.sort((a, b) => {
