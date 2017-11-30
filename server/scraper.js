@@ -27,8 +27,32 @@ const scrapeController = {
         
         const listLength = await page.evaluate((sel) => {
           return page.getElementsByClassName(sel).length;
-        }, '.show-info > h1 > a');
+        }, 'in');
         console.log(listLength);
+
+        // let username = await page.evaluate((sel) => {
+        //   return document.querySelector(sel).getAttribute('href').replace('/', '');
+        // }, usernameSelector);
+
+        // const gvSelectors = {
+        //   headliner: '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(INDEX) > div > div.show-info > h1 > a',
+        // };
+        // #main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(2) > div > div.show-info > h1 > a
+        // #main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(3) > div > div.show-info > h1 > a
+        // #main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(4) > div > div.show-info > h1 > a
+        const HEADLINER_SELECTOR = '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(INDEX) > div > div.show-info > h1 > a';
+
+        for (let i = 2; i < listLength; i += 1) {
+          const headlinerSelector = HEADLINER_SELECTOR.replace('INDEX', i);
+          console.log(headlinerSelector);
+          const listing = {};
+          listing.headliner = await page.evaluate((sel) => {
+            return document.querySelector(sel).innerHTML;
+          }, headlinerSelector);
+
+          output.push(listing);
+        }
+
         // const content = await page.content();
         // const $ = cheerio.load(content);
         
