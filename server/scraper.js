@@ -30,29 +30,34 @@ const scrapeController = {
         }, 'in');
         console.log('listLength:  ', listLength);
 
-        const showlistSections = await page.evaluate((sel) => {
+        const sectionLength = await page.evaluate((sel) => {
           return page.querySelectorAll(sel);
-        }, 'section.showlist');
-        console.log('showlistSections:  ', showlistSections);
+        }, '#main > div.xx.showlist.firstwrap.ng-scope > section.showlist');
+        console.log('sectionLength:  ', sectionLength);
 
         const gvSelectors = {
+          section: '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(INDEX)',
           headliner: '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(INDEX) > div > div.show-info > h1 > a',
         };
 
         // TODO: run this loop for each section.showlist
-        for (let i = 1; i < listLength; i += 1) {
-          const headlinerSelector = gvSelectors.headliner.replace('INDEX', i);
-          // console.log(headlinerSelector);
-          const listing = {};
-          listing.headliner = await page.evaluate((sel) => {
-            let element = document.querySelector(sel);
-            return element ? element.innerHTML : null;
-          }, headlinerSelector);
-
-          if (!listing.headliner) continue;
-
-          output.push(listing);
-        }
+        for (let i = 0; i < listLength; i += 1) {
+          const sectionSelector = gvSelectors.section.replace('INDEX', i);
+          console.log('sectionSelector:  ', sectionSelector);
+          for (let j = 1; j < listLength; j += 1) {
+            const headlinerSelector = gvSelectors.headliner.replace('INDEX', j);
+            // console.log(headlinerSelector);
+            const listing = {};
+            listing.headliner = await page.evaluate((sel) => {
+              let element = document.querySelector(sel);
+              return element ? element.innerHTML : null;
+            }, headlinerSelector);
+  
+            if (!listing.headliner) continue;
+  
+            output.push(listing);
+          }
+        };
 
         // const content = await page.content();
         // const $ = cheerio.load(content);
