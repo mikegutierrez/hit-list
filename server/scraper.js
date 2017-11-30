@@ -28,27 +28,21 @@ const scrapeController = {
         const listLength = await page.evaluate((sel) => {
           return page.getElementsByClassName(sel).length;
         }, 'in');
-        console.log(listLength);
+        console.log('listLength:  ', listLength);
 
-    
+        const showlistSections = await page.evaluate((sel) => {
+          return page.querySelectorAll(sel);
+        }, 'section.showlist');
+        console.log('showlistSections:  ', showlistSections);
 
-        // const gvSelectors = {
-        //   headliner: '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(INDEX) > div > div.show-info > h1 > a',
-        // };
-    
-        // let email = await page.evaluate((sel) => {
-        //   let element = document.querySelector(sel);
-        //   return element ? element.innerHTML : null;
-        // }, emailSelector);
+        const gvSelectors = {
+          headliner: '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(INDEX) > div > div.show-info > h1 > a',
+        };
 
-        // // not all users have emails visible
-        // if (!email)
-        //   continue;
-
-        const HEADLINER_SELECTOR = 'section.showlist > div:nth-child(INDEX) > div > div.show-info > h1 > a';
-        for (let i = 2; i < listLength; i += 1) {
-          const headlinerSelector = HEADLINER_SELECTOR.replace('INDEX', i);
-          console.log(headlinerSelector);
+        // TODO: run this loop for each section.showlist
+        for (let i = 1; i < listLength; i += 1) {
+          const headlinerSelector = gvSelectors.headliner.replace('INDEX', i);
+          // console.log(headlinerSelector);
           const listing = {};
           listing.headliner = await page.evaluate((sel) => {
             let element = document.querySelector(sel);
@@ -63,7 +57,7 @@ const scrapeController = {
         // const content = await page.content();
         // const $ = cheerio.load(content);
         
-        // await page.$('.in').map((elem) => {
+        // $('.in').map((elem) => {
         //   const listing = {};
         //   listing.headliner = $(elem).find('.show-info > h1 > a').text();
         //   listing.support = $(elem).find('.show-info > .support').text();
