@@ -10,7 +10,6 @@ const moment = require('moment');
 //   2: 'break out common functions',
 //   3: 'catch errors',
 //   4: 'add http://www.nederlanderconcerts.com/events/all to scraper',
-//   5: 'switch from phantom to https://github.com/GoogleChrome/puppeteer',
 // };
 
 const scrapeController = {
@@ -35,24 +34,56 @@ const scrapeController = {
         }, 'in');
         console.log('listLength:  ', listLength);
 
-
-        const gvSelectors = {
-          section: '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(INDEX)',
-          headliner: 'section.showlist > div:nth-child(INDEX) > div > div.show-info > h1 > a',
-        };
-
         async function gvScraper(list) {
+
+          
           for (let i = 1; i <= listLength; i += 1) {
-            const headlinerSelector = `section.showlist:nth-of-type(${list}) > div:nth-child(${i}) > div > div.show-info > h1 > a`;
-            // console.log(headlinerSelector);
+            
+            const gvSelectors = {
+              headliner: `section.showlist:nth-of-type(${list}) > div:nth-child(${i}) > div > div.show-info > h1 > a`,
+              support: `section.showlist:nth-of-type(${list}) > div:nth-child(${i}) > div > div.show-info > div.support`,
+              venue: `section.showlist:nth-of-type(${list}) > div:nth-child(${i}) > div > div.show-info > div.venue`,
+              date: `section.showlist:nth-of-type(${list}) > div:nth-child(${i}) > div > div.show-info > div.date`,
+            };
+
+
             const listing = {};
+
+
             listing.headliner = await page.evaluate((sel) => {
               let element = document.querySelector(sel);
               return element ? element.innerHTML : null;
-            }, headlinerSelector);
+            }, gvSelectors.headliner);
+
+            listing.support = await page.evaluate((sel) => {
+              let element = document.querySelector(sel);
+              return element ? element.innerHTML : 'Not Listed';
+            }, gvSelectors.support);
+
+            listing.venue = await page.evaluate((sel) => {
+              let element = document.querySelector(sel);
+              return element ? element.innerHTML.split(',')[0].trim() : 'Not Listed';
+            }, gvSelectors.venue);
+
+            listing.city = await page.evaluate((sel) => {
+              let element = document.querySelector(sel);
+              return element ? element.innerHTML.split(',')[1].trim() : 'Not Listed';
+            }, gvSelectors.venue);
+
+            listing.state = await page.evaluate((sel) => {
+              let element = document.querySelector(sel);
+              return element ? element.innerHTML.split(',')[2].trim() : 'Not Listed';
+            }, gvSelectors.venue);
+
+
+
   
             if (!listing.headliner) continue;
-            console.log('listing.headliner:  ', listing.headliner);
+            if (!listing.support) continue;
+            if (!listing.venue) continue;
+            if (!listing.city) continue;
+            if (!listing.state) continue;
+
             output.push(listing);
           }
         }
