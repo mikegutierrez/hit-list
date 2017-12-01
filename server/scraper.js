@@ -22,30 +22,28 @@ const scrapeController = {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
 
-        // await page.on('onResourceRequested', requestData => console.info('Requesting', requestData.url));
         await page.goto('http://www.goldenvoice.com/shows/');
         
+        // TODO: turn this into reusable function and modify showlistLength
+        const showlistLength = await page.evaluate((sel) => {
+          return page.querySelectorAll(sel).length;
+        }, '#main > div.xx.showlist.firstwrap.ng-scope > section.showlist');
+        console.log('showlistLength:  ', showlistLength);
+
         const listLength = await page.evaluate((sel) => {
           return page.getElementsByClassName(sel).length;
         }, 'in');
         console.log('listLength:  ', listLength);
 
-        const sectionLength = await page.evaluate((sel) => {
-          return page.querySelectorAll(sel);
-        }, '#main > div.xx.showlist.firstwrap.ng-scope > section.showlist');
-        console.log('sectionLength:  ', sectionLength);
 
         const gvSelectors = {
           section: '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(INDEX)',
-          headliner: '#main > div.xx.showlist.firstwrap.ng-scope > section:nth-child(3) > div:nth-child(INDEX) > div > div.show-info > h1 > a',
+          headliner: 'section.showlist > div:nth-child(INDEX) > div > div.show-info > h1 > a',
         };
 
-        // TODO: run this loop for each section.showlist
-        for (let i = 0; i < listLength; i += 1) {
-          const sectionSelector = gvSelectors.section.replace('INDEX', i);
-          console.log('sectionSelector:  ', sectionSelector);
-          for (let j = 1; j < listLength; j += 1) {
-            const headlinerSelector = gvSelectors.headliner.replace('INDEX', j);
+        async function gvScraper(list) {
+          for (let i = 1; i <= listLength; i += 1) {
+            const headlinerSelector = `section.showlist:nth-of-type(${list}) > div:nth-child(${i}) > div > div.show-info > h1 > a`;
             // console.log(headlinerSelector);
             const listing = {};
             listing.headliner = await page.evaluate((sel) => {
@@ -54,10 +52,18 @@ const scrapeController = {
             }, headlinerSelector);
   
             if (!listing.headliner) continue;
-  
+            console.log('listing.headliner:  ', listing.headliner);
             output.push(listing);
           }
-        };
+        }
+
+        async function runGvScraper() {
+          for (let i = 1; i <= showlistLength; i += 1) {
+            await gvScraper(i);
+          }
+        }
+
+        await runGvScraper();
 
         // const content = await page.content();
         // const $ = cheerio.load(content);
@@ -170,7 +176,8 @@ const scrapeController = {
           return dateA - dateB;
         });
         console.log('Scrape complete');
-        res.send(sortedOutput);
+        // res.send(sortedOutput);
+        res.send(output);
       }).catch(err => console.error(err));
     });
   },
