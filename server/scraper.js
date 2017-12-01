@@ -1,14 +1,6 @@
-'use strict';
-
 const cheerio = require('cheerio');
 const phantom = require('phantom');
 const moment = require('moment');
-
-// const TODO = {
-//   1: 'Promise.all or better async',
-//   2: 'break out common functions',
-//   4: 'add http://www.nederlanderconcerts.com/events/all to scraper',
-// };
 
 let lastRequest;
 let savedData = [];
@@ -23,7 +15,7 @@ const scrapeController = {
     lastRequest = Date.now();
     return new Promise((resolve, reject) => {
       const output = [];
-      
+
       async function goldenVoice() {
         const instance = await phantom.create();
         const page = await instance.createPage();
