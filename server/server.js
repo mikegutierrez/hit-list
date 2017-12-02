@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
 const scrapeController = require('./scraper');
-const Listing = require('./listingModel');
+const Listing = require('./model');
 
 const app = express();
 const PORT = 8080;

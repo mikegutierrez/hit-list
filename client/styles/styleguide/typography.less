@@ -1,8 +1,8 @@
 // Font Family
 @import url(https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900);
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
 
-@source-sans-pro: 'Source Sans Pro', sans-serif;
+@open-sans: 'Open Sans', sans-serif;
 @lato: 'Lato', sans-serif;
 
 .lato {
@@ -10,8 +10,8 @@
 	letter-spacing: .9px;
 }
 
-.source-sans-pro {
-	font-family: @source-sans-pro;
+.open-sans {
+	font-family: @open-sans;
 }
 
 // Font Sizes (target / base)
@@ -116,6 +116,9 @@ p {
 	text-transform: uppercase;
 }
 
+.text-center {
+	text-align: center;
+}
 
 // Font Weights
 @fw100: 100;
@@ -140,7 +143,7 @@ strong, .strong {
 // Underlines
 .underline {
 	height: 2px;
-	background: @br1;
+	background: @gld;
 	margin: 0;
 }
 
@@ -163,7 +166,7 @@ strong, .strong {
 // Links
 a,
 .link {
-	color: @gr1;
+	color: @gld;
 	font-weight: @fw600;
 	text-decoration: none;
 
@@ -172,7 +175,7 @@ a,
 	transition: color 0.3s;
 
 	&:hover {
-		color: @gr2;
+		color: @slk;
 		text-decoration: none;
 	}
 	&:hover, &:active, &:focus {

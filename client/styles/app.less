@@ -1,4 +1,37 @@
-// Application Styles - Override bootstrap
+// Application Styles
 @import 'lib';
 
-// body { background-color:@gr1; };
+html, body {
+	width: 100%;
+	height: 100%;
+	&:extend(.lato);
+	color: @chr;
+	background-color: @ppr;
+	font-size: @basefontsize;
+	font-weight: @basefontweight;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	text-shadow: 1px 1px 1px rgba(0,0,0, 0.004);
+  cursor: default;
+}
+
+#app {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#listing-container {
+  display: grid;
+  grid-template-columns: 200px 800px 200px;
+  grid-gap: @space;
+
+  #listings {
+    .listing {
+      border: 1px solid @chr;
+
+      span {
+        .fw-600;
+      }
+    }
+  }
+}
