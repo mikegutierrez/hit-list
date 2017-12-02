@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const scrapeController = require('./scraper');
 const Listing = require('./model');
+const colors = require('colors');
 
 const app = express();
 const PORT = 8080;
@@ -39,4 +40,4 @@ app.get('/data', (req, res) => {
   });
 });
 
-app.listen(PORT, () => console.log(`App listening on port ${PORT}...`));
+app.listen(PORT, () => console.log(`App listening on port ${PORT}...`.green));

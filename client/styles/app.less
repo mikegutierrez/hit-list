@@ -28,27 +28,41 @@ html, body {
   #listings {
     .listing {
       display: grid;
-      grid-template-columns: 25% 75%;
-      grid-gap: @space;
+      grid-template-columns: 23% 50% 23%;
+      grid-gap: 2%;
       align-items: center;
       border: 1px solid @chr;
       border-radius: @space-xs;
 
       .img-container {
+        height: 108px;
+        overflow: hidden;
+
         a > img {
           width: 100%;
         }
       }
 
-      span {
-        .fw-600;
+      .ticket-container {
+        .ticket-button {
+          padding: @space-m @space-xl;
+          .text-center;
+          border: 1px solid @gld0;
+          border-radius: @space-s;
+          transition: @trans-all500;
+          cursor: pointer;
+
+          &:hover {
+            border-color: @gld1;
+          }
+        }
       }
     }
   }
 }
 
 .section-title {
-  .h4;
+  .h3;
   .fw-600;
   .open-sans;
 }

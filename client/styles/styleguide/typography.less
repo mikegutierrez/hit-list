@@ -21,7 +21,7 @@
 
 @h1: 48 / @basefontsize * 1em;
 @h2: 36 / @basefontsize * 1em;
-@h3: 28 / @basefontsize * 1em;
+@h3: 22 / @basefontsize * 1em;
 @h4: 21 / @basefontsize * 1em;
 @h5: 18 / @basefontsize * 1em;
 @h6: 1em;
@@ -143,7 +143,7 @@ strong, .strong {
 // Underlines
 .underline {
 	height: 2px;
-	background: @gld;
+	background: @gld1;
 	&:extend(.margin-top-s);
 	&:extend(.margin-bottom-m);
 }
@@ -167,7 +167,7 @@ strong, .strong {
 // Links
 a,
 .link {
-	color: @gld;
+	color: @gld0;
 	font-weight: @fw600;
 	text-decoration: none;
 
@@ -176,7 +176,7 @@ a,
 	transition: color 0.3s;
 
 	&:hover {
-		color: @slk;
+		color: @gld1;
 		text-decoration: none;
 	}
 	&:hover, &:active, &:focus {

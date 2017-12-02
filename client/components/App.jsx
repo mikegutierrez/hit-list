@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 
 class App extends Component {
   constructor(props) {
@@ -52,6 +53,7 @@ class App extends Component {
 
   mapListings(selection) {
     return selection.map((event, idx) => {
+      const displaySupport = event.support !== 'Not Listed' ? <div className="h6 fw-600">{event.support}</div> : null;
       return (
         <div key={idx} className="listing margin-top-m margin-bottom-m padding-m box-shadow-light">
           <div className="img-container">
@@ -60,13 +62,17 @@ class App extends Component {
             </a>
           </div>
           <div className="content-container">
-            <div><span>Headliner:</span> {event.headliner}</div>
-            <div><span>Support:</span> {event.support}</div>
-            <div><span>Venue:</span> {event.venue}</div>
-            <div><span>Location:</span> {event.city}, {event.state}</div>
-            <div><span>Date:</span> {event.date}</div>
-            <div><span>Doors:</span> {event.time}</div>
-            <div><a href={event.tickets} target="_blank">Tickets</a></div>
+            <div className="margin-bottom-m">
+              <div className="h4 fw-600 text-gld0">{event.headliner}</div>
+              {displaySupport}
+            </div>
+            <div className="small fw-600">
+              <div className="date">{event.date} at {event.time}</div>
+              <div className="location"><span className="text-gld0 uppercase">{event.venue}</span> in {event.city}, {event.state}</div>
+            </div>
+          </div>
+          <div className="ticket-container">
+            <a className="ticket-button" href={event.tickets} target="_blank">Tickets</a>
           </div>
         </div>
       );
