@@ -18296,18 +18296,97 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
-      name: 'Hit List App Component'
+      name: 'Hit List App Component',
+      endpoint: 'http://localhost:8080/data',
+      listings: []
     };
     return _this;
   }
 
   _createClass(App, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      fetch(this.state.endpoint).then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        var events = data.map(function (event, idx) {
+          return _react2.default.createElement(
+            'div',
+            { key: idx, style: { margin: '20px 0' } },
+            _react2.default.createElement(
+              'div',
+              null,
+              'Headliner: ',
+              event.headliner
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              'Support: ',
+              event.support
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              'Venue: ',
+              event.venue
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              'Location: ',
+              event.city,
+              ', ',
+              event.state
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              'Date: ',
+              event.date
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              'Doors: ',
+              event.time
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement(
+                'a',
+                { href: event.tickets, target: '_blank' },
+                'Tickets'
+              )
+            )
+          );
+        });
+        _this2.setState({ listings: events });
+        console.log('state:  ', _this2.state.listings);
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      console.log(this.state.listings);
       return _react2.default.createElement(
         'div',
-        null,
-        this.state.name
+        { id: 'app' },
+        _react2.default.createElement(
+          'div',
+          null,
+          this.state.name
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          this.state.listings
+        )
       );
     }
   }]);
