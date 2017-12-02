@@ -6,10 +6,13 @@ class App extends Component {
     this.state = {
       endpoint: 'http://localhost:8080/data',
       listings: [],
+      filteredList: [],
+      selectedLocation: 'California',
     };
+    this.getSelectedData = this.getSelectedData.bind(this);
+    this.filterData = this.filterData.bind(this);
     this.mapListings = this.mapListings.bind(this);
-    this.getCities = this.getCities.bind(this);
-    this.renderCitySelect = this.renderCitySelect.bind(this);
+    this.renderSelect = this.renderSelect.bind(this);
   }
 
   componentDidMount() {
@@ -22,16 +25,24 @@ class App extends Component {
       .catch(err => console.error(err));
   }
 
-  getCities() {
+  getSelectedData(selection) {
     const { listings } = this.state;
-    return listings.map(listing => listing.city).sort().filter((itm, pos, arr) => {
+    return listings.map(listing => listing[selection]).sort().filter((itm, pos, arr) => {
       return !pos || itm !== arr[pos - 1];
     });
   }
 
-  mapListings() {
+  filterData(event, selection) {
+    console.log('selection:  ', selection);
     const { listings } = this.state;
-    return listings.map((event, idx) => {
+    const filter = listings.filter((listing) => {
+      return listing[selection] === event.target.value;
+    });
+    this.setState({ filteredList: filter, selectedLocation: selection === 'city' ? event.target.value : filter[0].city });
+  }
+
+  mapListings(selection) {
+    return selection.map((event, idx) => {
       return (
         <div key={idx} className="listing margin-top-m margin-bottom-m padding-m box-shadow-light">
           <div><span>Headliner:</span> {event.headliner}</div>
@@ -46,29 +57,35 @@ class App extends Component {
     });
   }
 
-  renderCitySelect() {
+  renderSelect(selection, title) {
     return (
-      <select id="filter-city">
-        <option value="city">City</option>
-        {this.getCities().map((city, idx) => <option key={idx} value={city.replace(/\s/g, '')}>{city}</option>)}
+      <select id={`filter-${selection}`} onChange={event => this.filterData(event, selection)} className="margin-bottom">
+        <option value="California">{`All ${title}`}</option>
+        {this.getSelectedData(selection).map((selection, idx) => <option key={idx} value={selection}>{selection}</option>)}
       </select>
     );
   }
 
   render() {
+    const { listings, filteredList, selectedLocation } = this.state;
+    const displayList = filteredList.length ? filteredList : listings;
     return (
       <div id="app" className="padding-m">
         <div id="listing-container">
           <div id="favorites">
-            <div className="h4 fw-600 open-sans">Favorites</div>
+            <div className="section-title">Favorites</div>
+            <div className="underline-s" />
           </div>
           <div id="listings">
-            <div className="h4 fw-600 open-sans text-chr">Upcoming Concerts in Los Angeles</div>
-            {this.state.listings && this.mapListings()}
+            <div className="section-title text-chr">Upcoming Concerts in {selectedLocation} - {displayList.length}</div>
+            <div className="underline-s" />
+            {this.state.listings && this.mapListings(displayList)}
           </div>
           <div id="filters">
-            <div className="h4 fw-600 open-sans">Filters</div>
-            {this.getCities() && this.renderCitySelect()}
+            <div className="section-title">Filters</div>
+            <div className="underline-s" />
+            {this.getSelectedData('city') && this.renderSelect('city', 'Cities')}
+            {this.getSelectedData('venue') && this.renderSelect('venue', 'Venues')}
           </div>
         </div>
       </div>
