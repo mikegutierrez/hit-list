@@ -70,3 +70,22 @@ html, body {
 select {
   width: 100%;
 }
+
+.star {
+  cursor: pointer;
+  transition: @trans-all500;
+
+  polygon {
+    fill: #d8d8d8;
+
+    &.favoriteListing {
+        fill: @gld2 !important;
+      }
+  }
+
+  &:hover {
+    polygon {
+      fill: @gld2 !important;
+    } 
+  }
+}

@@ -10,11 +10,15 @@ class App extends Component {
       filteredList: [],
       selectedLocation: 'California',
       selectedVenue: '',
+      favorites: [],
     };
     this.getSelectedData = this.getSelectedData.bind(this);
     this.filterData = this.filterData.bind(this);
     this.mapListings = this.mapListings.bind(this);
     this.renderSelect = this.renderSelect.bind(this);
+    this.renderStar = this.renderStar.bind(this);
+    this.addToFavorites = this.addToFavorites.bind(this);
+    this.renderFavorites = this.renderFavorites.bind(this);
   }
 
   componentDidMount() {
@@ -53,22 +57,22 @@ class App extends Component {
 
   mapListings(selection) {
     return selection.map((event, idx) => {
-      const displaySupport = event.support !== 'Not Listed' ? <div className="h6 fw-600">{event.support}</div> : null;
+      const displaySupport = event.support !== 'Not Listed' ? <div className="support h6 fw-600">{event.support}</div> : null;
       return (
         <div key={idx} className="listing margin-top-m margin-bottom-m padding-m box-shadow-light">
           <div className="img-container">
             <a href={event.tickets} target="_blank">
-              <img src={event.image} alt=""/>
+              <img src={event.image} alt="" />
             </a>
           </div>
           <div className="content-container">
             <div className="margin-bottom-m">
-              <div className="h4 fw-600 text-gld0">{event.headliner}</div>
+              <div className="headliner h4 fw-600 text-gld0">{event.headliner} {this.renderStar()}</div>
               {displaySupport}
             </div>
             <div className="small fw-600">
               <div className="date">{event.date} at {event.time}</div>
-              <div className="location"><span className="text-gld0 uppercase">{event.venue}</span> in {event.city}, {event.state}</div>
+              <div><span className="location text-gld0 uppercase">{event.venue}</span> in {event.city}, {event.state}</div>
             </div>
           </div>
           <div className="ticket-container">
@@ -77,6 +81,39 @@ class App extends Component {
         </div>
       );
     });
+  }
+
+  addToFavorites(event) {
+    const { favorites } = this.state;
+    const globalFavorites = [...favorites];
+    const headliner = event.target.closest('.headliner').textContent.trim();
+
+    event.target.classList.toggle('favoriteListing');
+
+    if (favorites.includes(headliner)) {
+      const index = favorites.indexOf(headliner);
+      globalFavorites.splice(index, 1);
+    } else {
+      globalFavorites.push(headliner);
+    }
+    this.setState({ favorites: globalFavorites });
+  }
+
+  renderFavorites() {
+    const { favorites } = this.state;
+    return favorites.map((favorite, idx) => {
+      return (
+        <div key={idx}>{favorite}</div>
+      );
+    });
+  }
+
+  renderStar() {
+    return (
+      <svg height="20" width="20" className="star" onClick={event => this.addToFavorites(event)}>
+        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style={{ fillRule: 'nonzero' }} />
+      </svg>
+    );
   }
 
   renderSelect(selection, title) {
@@ -98,6 +135,7 @@ class App extends Component {
           <div id="favorites">
             <div className="section-title">Favorites</div>
             <div className="underline-s" />
+            {this.state.favorites && this.renderFavorites()}
           </div>
           <div id="listings">
             <div className="section-title text-chr">Upcoming Concerts in {selectedLocation} - {displayList.length}</div>
