@@ -13,22 +13,24 @@ const ListingSchema = new Schema({
   tickets: String,
 });
 
-module.exports = function(data) {
-  mongoose.connect('mongodb://localhost:27017/hitlist');
-  mongoose.connection.once('open', () => {
-    const Listing = mongoose.model('Listing', ListingSchema);
+module.exports = mongoose.model('Listing', ListingSchema);
 
-    data.forEach((event) => {
-      Listing.create({
-        headliner: event.headliner,
-        support: event.support,
-        venue: event.venue,
-        city: event.city,
-        state: event.state,
-        date: event.date,
-        time: event.time,
-        tickets: event.tickets,
-      });
-    });
-  });
-}
+// module.exports = function(data) {
+//   mongoose.connect('mongodb://localhost:27017/hitlist');
+//   mongoose.connection.once('open', () => {
+//     const Listing = mongoose.model('Listing', ListingSchema);
+
+//     data.forEach((event) => {
+//       Listing.create({
+//         headliner: event.headliner,
+//         support: event.support,
+//         venue: event.venue,
+//         city: event.city,
+//         state: event.state,
+//         date: event.date,
+//         time: event.time,
+//         tickets: event.tickets,
+//       });
+//     });
+//   });
+// }

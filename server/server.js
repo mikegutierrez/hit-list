@@ -1,9 +1,13 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
 const scrapeController = require('./scraper');
+const Listing = require('./listingModel');
 
 const app = express();
 const PORT = 8080;
+
+mongoose.connect('mongodb://localhost:27017/hitlist');
 
 app.use(express.static(path.join(__dirname, './../')));
 
@@ -13,15 +17,24 @@ app.use((req, res, next) => {
   next();
 });
 
-
-// app.get('/', (req, res) => {
-//   res.set('Content-Type', 'text/html');
-//   res.status(200).send('Welcome to Hit List');
-// });
+scrapeController.getData().then((data) => {
+  data.forEach((event) => {
+    Listing.create({
+      headliner: event.headliner,
+      support: event.support,
+      venue: event.venue,
+      city: event.city,
+      state: event.state,
+      date: event.date,
+      time: event.time,
+      tickets: event.tickets,
+    });
+  });
+});
 
 app.get('/data', (req, res) => {
-  scrapeController.getData(req, res).then(() => {
-    res.json();
+  Listing.find({}, (err, data) => {
+    res.json(data);
   });
 });
 

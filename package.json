@@ -4,7 +4,6 @@
   "description": "Live concert aggregator for Los Angeles.",
   "main": "./server/server.js",
   "scripts": {
-    "db": "node ./server/capture.js",
     "start": "node ./server/server.js",
     "webpack": "./node_modules/.bin/webpack -w"
   },
@@ -23,6 +22,7 @@
     "mongoose": "^4.13.5",
     "path": "^0.12.7",
     "phantom": "^4.0.9",
+    "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "request": "^2.83.0",

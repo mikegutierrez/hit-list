@@ -110,7 +110,7 @@ const scrapeController = {
         });
         console.log('Scrape complete');
         savedData = sortedOutput;
-        res.send(savedData);
+        resolve(savedData);
       }))).catch(err => console.error(`Error: ${err.message}`));
     });
   },
