@@ -54,13 +54,20 @@ class App extends Component {
     return selection.map((event, idx) => {
       return (
         <div key={idx} className="listing margin-top-m margin-bottom-m padding-m box-shadow-light">
-          <div><span>Headliner:</span> {event.headliner}</div>
-          <div><span>Support:</span> {event.support}</div>
-          <div><span>Venue:</span> {event.venue}</div>
-          <div><span>Location:</span> {event.city}, {event.state}</div>
-          <div><span>Date:</span> {event.date}</div>
-          <div><span>Doors:</span> {event.time}</div>
-          <div><a href={event.tickets} target="_blank">Tickets</a></div>
+          <div className="img-container">
+            <a href={event.tickets} target="_blank">
+              <img src={event.image} alt=""/>
+            </a>
+          </div>
+          <div className="content-container">
+            <div><span>Headliner:</span> {event.headliner}</div>
+            <div><span>Support:</span> {event.support}</div>
+            <div><span>Venue:</span> {event.venue}</div>
+            <div><span>Location:</span> {event.city}, {event.state}</div>
+            <div><span>Date:</span> {event.date}</div>
+            <div><span>Doors:</span> {event.time}</div>
+            <div><a href={event.tickets} target="_blank">Tickets</a></div>
+          </div>
         </div>
       );
     });

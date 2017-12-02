@@ -27,8 +27,18 @@ html, body {
 
   #listings {
     .listing {
+      display: grid;
+      grid-template-columns: 25% 75%;
+      grid-gap: @space;
+      align-items: center;
       border: 1px solid @chr;
       border-radius: @space-xs;
+
+      .img-container {
+        a > img {
+          width: 100%;
+        }
+      }
 
       span {
         .fw-600;

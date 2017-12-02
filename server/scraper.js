@@ -19,6 +19,7 @@ const scrapeController = {
       const output = [];
 
       async function goldenVoice() {
+        console.log('Scraping goldenvoice...'.yellow);
         const instance = await phantom.create();
         const page = await instance.createPage();
 
@@ -41,6 +42,7 @@ const scrapeController = {
           listing.date = moment($(elem).find('.show-info > .date').text().split(',')[0]).format('YYYY-MM-DD');
           listing.time = $(elem).find('.show-info > .date').text().split(',')[1].trim().toLowerCase();
           listing.tickets = $(elem).find('.bottomshowpart > .wrapbuttonsshows > .buy-ticketlink').attr('href');
+          listing.image = $(elem).find('.show-img:nth-of-type(4) > a > img').attr('src') || $(elem).find('.show-img> a > img').attr('src');
           output.push(listing);
         });
 
@@ -48,6 +50,7 @@ const scrapeController = {
       }
 
       async function liveNation() {
+        console.log('Scraping livenation...'.red);
         const instance = await phantom.create();
         const page = await instance.createPage();
 
@@ -77,6 +80,7 @@ const scrapeController = {
           listing.date = moment($(elem).find('.event-details > .event-row-date > .event-date').attr('content')).format('YYYY-MM-DD');
           listing.time = formatTime($(elem).find('.event-details > .event-row-date > .event-day').text().split('@ ')[1]);
           listing.tickets = 'https://www.livenation.com' + $(elem).find('.event-row-buy > div > a').attr('href');
+          listing.image = $(elem).find('.event-details > .event-image > img').attr('src');
           output.push(listing);
         });
 
@@ -84,6 +88,7 @@ const scrapeController = {
       }
 
       async function spaceLand() {
+        console.log('Scraping spaceland...'.magenta);
         const instance = await phantom.create();
         const page = await instance.createPage();
 
@@ -102,6 +107,7 @@ const scrapeController = {
           listing.date = moment($(elem).find('.list-view-details > .times > .start > span').attr('title')).format('YYYY-MM-DD');
           listing.time = moment($(elem).find('.list-view-details > .times > .start > span').attr('title')).format('h:mm a');
           listing.tickets = $(elem).find('.ticket-price > h3 > a').attr('href') || 'Free';
+          listing.image = $(elem).find('a > img').attr('src');
           output.push(listing);
         });
 

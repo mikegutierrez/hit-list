@@ -28,6 +28,7 @@ scrapeController.getData().then((data) => {
       date: event.date,
       time: event.time,
       tickets: event.tickets,
+      image: event.image,
     });
   });
 });

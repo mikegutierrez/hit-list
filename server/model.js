@@ -11,6 +11,7 @@ const ListingSchema = new Schema({
   date: String,
   time: String,
   tickets: String,
+  image: String,
 });
 
 module.exports = mongoose.model('Listing', ListingSchema);
