@@ -57,6 +57,12 @@ class App extends Component {
 
   mapListings(selection) {
     return selection.map((event, idx) => {
+      const data = {
+        headliner: event.headliner,
+        venue: event.venue,
+        date: event.date,
+        tickets: event.tickets,
+      };
       const displaySupport = event.support !== 'Not Listed' ? <div className="support h6 fw-600">{event.support}</div> : null;
       return (
         <div key={idx} className="listing margin-top-m margin-bottom-m padding-m box-shadow-light">
@@ -67,7 +73,7 @@ class App extends Component {
           </div>
           <div className="content-container">
             <div className="margin-bottom-m">
-              <div className="headliner h4 fw-600 text-gld0">{event.headliner} {this.renderStar()}</div>
+              <div className="headliner h4 fw-600 text-gld0">{event.headliner} {this.renderStar(data)}</div>
               {displaySupport}
             </div>
             <div className="small fw-600">
@@ -83,19 +89,20 @@ class App extends Component {
     });
   }
 
-  addToFavorites(event) {
+  addToFavorites(event, data) {
     const { favorites } = this.state;
     const globalFavorites = [...favorites];
-    const headliner = event.target.closest('.headliner').textContent.trim();
 
     event.target.classList.toggle('favoriteListing');
 
-    if (favorites.includes(headliner)) {
-      const index = favorites.indexOf(headliner);
-      globalFavorites.splice(index, 1);
-    } else {
-      globalFavorites.push(headliner);
-    }
+    // TODO: if object already in favorites, remove. else add it. 
+    // if (favorites.filter(obj => obj.headliner === data.headliner)) {
+    //   // const index = favorites.indexOf(obj);
+    //   // globalFavorites.splice(index, 1);
+    // } else {
+    //   globalFavorites.push({ data });
+    // }
+    globalFavorites.push({ data });
     this.setState({ favorites: globalFavorites });
   }
 
@@ -103,14 +110,17 @@ class App extends Component {
     const { favorites } = this.state;
     return favorites.map((favorite, idx) => {
       return (
-        <div key={idx}>{favorite}</div>
+        <div key={idx} className="favorite margin-bottom" onClick={() => window.open(favorite.data.tickets, '_blank')}>
+          <div className="fw-600">{favorite.data.headliner}</div>
+          <div className="xsmall">{favorite.data.date} at {favorite.data.venue}</div>
+        </div>
       );
     });
   }
 
-  renderStar() {
+  renderStar(data) {
     return (
-      <svg height="20" width="20" className="star" onClick={event => this.addToFavorites(event)}>
+      <svg height="20" width="20" className="star" onClick={event => this.addToFavorites(event, data)}>
         <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style={{ fillRule: 'nonzero' }} />
       </svg>
     );
