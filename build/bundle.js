@@ -18301,7 +18301,8 @@ var App = function (_Component) {
       endpoint: 'http://localhost:8080/data',
       listings: [],
       filteredList: [],
-      selectedLocation: 'California'
+      selectedLocation: 'California',
+      selectedVenue: ''
     };
     _this.getSelectedData = _this.getSelectedData.bind(_this);
     _this.filterData = _this.filterData.bind(_this);
@@ -18329,9 +18330,15 @@ var App = function (_Component) {
   }, {
     key: 'getSelectedData',
     value: function getSelectedData(selection) {
-      var listings = this.state.listings;
+      var _state = this.state,
+          listings = _state.listings,
+          filteredList = _state.filteredList;
 
-      return listings.map(function (listing) {
+      var mapList = function mapList() {
+        if (selection === 'venue' && filteredList.length) return filteredList;
+        return listings;
+      };
+      return mapList().map(function (listing) {
         return listing[selection];
       }).sort().filter(function (itm, pos, arr) {
         return !pos || itm !== arr[pos - 1];
@@ -18340,13 +18347,17 @@ var App = function (_Component) {
   }, {
     key: 'filterData',
     value: function filterData(event, selection) {
-      console.log('selection:  ', selection);
       var listings = this.state.listings;
 
       var filter = listings.filter(function (listing) {
         return listing[selection] === event.target.value;
       });
-      this.setState({ filteredList: filter, selectedLocation: selection === 'city' ? event.target.value : filter[0].city });
+      var displayLocation = function displayLocation() {
+        if (selection === 'city') return event.target.value;
+        if (!filter.length) return 'California';
+        return filter[0].city;
+      };
+      this.setState({ filteredList: filter, selectedLocation: displayLocation(), selectedVenue: event.target.value });
     }
   }, {
     key: 'mapListings',
@@ -18440,11 +18451,12 @@ var App = function (_Component) {
     value: function renderSelect(selection, title) {
       var _this3 = this;
 
+      var selectValue = selection === 'city' ? this.state.selectedLocation : this.state.selectedVenue;
       return _react2.default.createElement(
         'select',
         { id: 'filter-' + selection, onChange: function onChange(event) {
             return _this3.filterData(event, selection);
-          }, className: 'margin-bottom' },
+          }, className: 'margin-bottom', value: selectValue },
         _react2.default.createElement(
           'option',
           { value: 'California' },
@@ -18462,10 +18474,10 @@ var App = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _state = this.state,
-          listings = _state.listings,
-          filteredList = _state.filteredList,
-          selectedLocation = _state.selectedLocation;
+      var _state2 = this.state,
+          listings = _state2.listings,
+          filteredList = _state2.filteredList,
+          selectedLocation = _state2.selectedLocation;
 
       var displayList = filteredList.length ? filteredList : listings;
       return _react2.default.createElement(
@@ -18535,7 +18547,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(30)(content, options);
+var update = __webpack_require__(31)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -18555,19 +18567,101 @@ if(false) {
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(32)(undefined);
+exports = module.exports = __webpack_require__(30)(undefined);
 // imports
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900);", ""]);
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);", ""]);
 
 // module
-exports.push([module.i, ".margin-0 {\n  margin: 0 !important;\n}\n.margin-xs {\n  margin: 2px;\n}\n.margin-s {\n  margin: 5px;\n}\n.margin-m {\n  margin: 10px;\n}\n.margin {\n  margin: 15px;\n}\n.margin-lg {\n  margin: 30px;\n}\n.margin-xl {\n  margin: 45px;\n}\n.margin-top-0 {\n  margin-top: 0 !important;\n}\n.margin-top-xs {\n  margin-top: 2px;\n}\n.margin-top-s,\n.underline,\n.underline-s,\n.underline-m,\n.underline-lg {\n  margin-top: 5px;\n}\n.margin-top-m {\n  margin-top: 10px;\n}\n.margin-top {\n  margin-top: 15px;\n}\n.margin-top-lg {\n  margin-top: 30px;\n}\n.margin-top-xl {\n  margin-top: 45px;\n}\n.margin-right-0 {\n  margin-right: 0 !important;\n}\n.margin-right-xs {\n  margin-right: 2px;\n}\n.margin-right-s {\n  margin-right: 5px;\n}\n.margin-right-m {\n  margin-right: 10px;\n}\n.margin-right {\n  margin-right: 15px;\n}\n.margin-right-lg {\n  margin-right: 30px;\n}\n.margin-right-xl {\n  margin-right: 45px;\n}\n.margin-bottom-0 {\n  margin-bottom: 0 !important;\n}\n.margin-bottom-xs {\n  margin-bottom: 2px;\n}\n.margin-bottom-s {\n  margin-bottom: 5px;\n}\n.margin-bottom-m,\n.underline,\n.underline-s,\n.underline-m,\n.underline-lg {\n  margin-bottom: 10px;\n}\n.margin-bottom {\n  margin-bottom: 15px;\n}\n.margin-bottom-lg {\n  margin-bottom: 30px;\n}\n.margin-bottom-xl {\n  margin-bottom: 45px;\n}\n.margin-left-0 {\n  margin-left: 0 !important;\n}\n.margin-left-xs {\n  margin-left: 2px;\n}\n.margin-left-s {\n  margin-left: 5px;\n}\n.margin-left-m {\n  margin-left: 10px;\n}\n.margin-left {\n  margin-left: 15px;\n}\n.margin-left-lg {\n  margin-left: 30px;\n}\n.margin-left-xl {\n  margin-left: 45px;\n}\n.padding-xs {\n  padding: 2px;\n}\n.padding-s {\n  padding: 5px;\n}\n.padding-m {\n  padding: 10px;\n}\n.padding {\n  padding: 15px;\n}\n.padding-lg {\n  padding: 30px;\n}\n.padding-xl {\n  padding: 45px;\n}\n.padding-top-xs {\n  padding-top: 2px;\n}\n.padding-top-s {\n  padding-top: 5px;\n}\n.padding-top-m {\n  padding-top: 10px;\n}\n.padding-top {\n  padding-top: 15px;\n}\n.padding-top-lg {\n  padding-top: 30px;\n}\n.padding-top-xl {\n  padding-top: 45px;\n}\n.padding-right-xs {\n  padding-right: 2px;\n}\n.padding-right-s {\n  padding-right: 5px;\n}\n.padding-right-m {\n  padding-right: 10px;\n}\n.padding-right {\n  padding-right: 15px;\n}\n.padding-right-lg {\n  padding-right: 30px;\n}\n.padding-right-xl {\n  padding-right: 45px;\n}\n.padding-bottom-xs {\n  padding-bottom: 2px;\n}\n.padding-bottom-s {\n  padding-bottom: 5px;\n}\n.padding-bottom-m {\n  padding-bottom: 10px;\n}\n.padding-bottom {\n  padding-bottom: 15px;\n}\n.padding-bottom-lg {\n  padding-bottom: 30px;\n}\n.padding-bottom-xl {\n  padding-bottom: 45px;\n}\n.padding-left-xs {\n  padding-left: 2px;\n}\n.padding-left-s {\n  padding-left: 5px;\n}\n.padding-left-m {\n  padding-left: 10px;\n}\n.padding-left {\n  padding-left: 15px;\n}\n.padding-left-lg {\n  padding-left: 30px;\n}\n.padding-left-xl {\n  padding-left: 45px;\n}\n/*\n * .generate-color-schema(@colorName, @colorValue)\n *\n *   Generates a set of classes for a given color variable.\n *\n *   Usage:\n *\n *     @b0: #070A0D;\n *     .generate-color-schema(b0, @b0);\n *\n *   Results in the following classes:\n *\n *     .text-b0 { color: #070A0D; }\n *     .bg-b0 { background-color: #070A0D; }\n */\n.text-white {\n  color: white;\n}\n.text-black {\n  color: black;\n}\n.bg-white {\n  background: white;\n}\n.bg-black {\n  background: black;\n}\n.text-gld {\n  color: #C1B186;\n}\n.bg-gld {\n  background-color: #C1B186;\n}\n.text-slk {\n  color: #DED1C2;\n}\n.bg-slk {\n  background-color: #DED1C2;\n}\n.text-ppr {\n  color: #F5F5F5;\n}\n.bg-ppr {\n  background-color: #F5F5F5;\n}\n.text-chr {\n  color: #383838;\n}\n.bg-chr {\n  background-color: #383838;\n}\n.inline {\n  display: inline;\n}\n.inline-block {\n  display: inline-block;\n}\n.table {\n  display: table;\n}\n.fixed {\n  position: fixed !important;\n}\n.absolute {\n  position: absolute !important;\n}\n.relative {\n  position: relative !important;\n}\n.center-content {\n  display: flex;\n  justify-content: center;\n}\n.align-vertical {\n  display: table-cell;\n  vertical-align: middle;\n}\n.vertically-center {\n  position: relative;\n  transform: translateY(-50%);\n  top: 50%;\n}\n.flip-vertical {\n  transform: rotate(180deg);\n}\n.overflow-ellipses {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.radius-xs {\n  border-radius: 2px;\n}\n.radius-s {\n  border-radius: 5px;\n}\n.radius {\n  border-radius: 15px;\n}\n.radius-s-top {\n  border-top-left-radius: 5px;\n  border-top-right-radius: 5px;\n}\n.radius-s-bottom {\n  border-bottom-left-radius: 5px;\n  border-bottom-right-radius: 5px;\n}\n.box-shadow {\n  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);\n}\n.box-shadow-light {\n  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);\n}\n/*! normalize.css v3.0.1 | MIT License | git.io/normalize */\n* {\n  box-sizing: border-box;\n}\nhtml {\n  size-adjust: 100%;\n}\nbody {\n  margin: 0;\n}\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nnav,\nsection,\nsummary {\n  display: block;\n}\naudio,\ncanvas,\nprogress,\nvideo {\n  display: inline-block;\n  vertical-align: baseline;\n}\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n[hidden],\ntemplate {\n  display: none;\n}\na {\n  background: transparent;\n}\na:active,\na:hover {\n  outline: 0;\n  cursor: pointer;\n}\nabbr[title] {\n  border-bottom: 1px dotted;\n}\nabbr {\n  text-decoration: none;\n  border-bottom: 0;\n}\nb,\nstrong {\n  font-weight: bold;\n}\ndfn {\n  font-style: italic;\n}\nmark {\n  background: #ff0;\n  color: #000;\n}\nsmall {\n  font-size: 80%;\n}\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\nsup {\n  top: -0.5em;\n}\nsub {\n  bottom: -0.25em;\n}\nimg {\n  border: 0;\n}\nsvg:not(:root) {\n  overflow: hidden;\n}\nfigure {\n  margin: 1em 40px;\n}\nhr {\n  box-sizing: content-box;\n  height: 0;\n}\npre {\n  overflow: auto;\n}\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, monospace;\n  font-size: 1em;\n}\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  color: inherit;\n  font: inherit;\n  margin: 0;\n}\nbutton {\n  overflow: visible;\n}\nbutton:hover,\nbutton:focus {\n  cursor: pointer;\n}\nbutton,\nselect {\n  text-transform: none;\n}\nbutton,\nhtml input[type=\"button\"] {\n  appearance: button;\n  cursor: pointer;\n}\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default;\n}\nbutton input::focus-inner {\n  border: 0;\n  padding: 0;\n}\ninput {\n  line-height: normal;\n}\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  appearance: button;\n  cursor: pointer;\n}\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  box-sizing: border-box;\n  padding: 0;\n}\ninput[type=\"number\"]::inner-spin-button,\ninput[type=\"number\"]::outer-spin-button {\n  height: auto;\n}\ninput[type=\"search\"] {\n  box-sizing: border-box;\n  -webkit-appearance: none;\n  appearance: none;\n}\ninput[type=\"search\"]::search-cancel-button,\ninput[type=\"search\"]::search-decoration {\n  -webkit-appearance: none;\n  appearance: none;\n}\nfieldset {\n  border: 1px solid #c0c0c0;\n  margin: 0 2px;\n  padding: 0.35em 0.625em 0.75em;\n}\nlegend {\n  border: 0;\n  padding: 0;\n}\ntextarea {\n  overflow: auto;\n}\noptgroup {\n  font-weight: bold;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\ntd,\nth {\n  padding: 0;\n}\nul,\nli {\n  margin: 0;\n  padding: 0;\n}\n.lato,\nhtml,\nbody {\n  font-family: 'Lato', sans-serif;\n  letter-spacing: .9px;\n}\n.open-sans {\n  font-family: 'Open Sans', sans-serif;\n}\nh1,\n.h1 {\n  font-size: 3em;\n  font-weight: 300;\n}\nh2,\n.h2 {\n  font-size: 2.25em;\n  font-weight: 300;\n}\nh3,\n.h3 {\n  font-size: 1.75em;\n  font-weight: 300;\n}\nh4,\n.h4 {\n  font-size: 1.3125em;\n  font-weight: 300;\n}\nh5,\n.h5 {\n  font-size: 1.125em;\n  font-weight: 300;\n}\nh6,\n.h6 {\n  font-size: 1em;\n  font-weight: 300;\n}\nh1 {\n  margin-bottom: .5em;\n  line-height: 1em;\n}\nh2 {\n  margin-bottom: 0.6666666667em;\n  line-height: 1.33333333em;\n}\nh3 {\n  margin-bottom: 1em;\n  line-height: 1em;\n}\nh4 {\n  margin-bottom: 1.1428571429em;\n  line-height: 1.14285714em;\n}\nh5 {\n  margin-bottom: 1.3333333333em;\n  line-height: 2.66666667em;\n}\nh6 {\n  margin-bottom: 1.7142857143em;\n  line-height: 1.5em;\n}\nsmall,\n.small {\n  font-size: 0.85em;\n}\n.xsmall {\n  font-size: 0.75em;\n}\np {\n  font-size: 1em;\n  line-height: 1.5em;\n  margin-bottom: 1.5em;\n  font-weight: 400;\n}\np:last-child {\n  margin: 0;\n}\n.italic {\n  font-style: italic;\n}\n.uppercase {\n  text-transform: uppercase;\n}\n.text-center {\n  text-align: center;\n}\nstrong,\n.strong {\n  font-weight: 900;\n}\n.fw-100 {\n  font-weight: 100 !important;\n}\n.fw-300 {\n  font-weight: 300 !important;\n}\n.fw-400 {\n  font-weight: 400 !important;\n}\n.fw-600 {\n  font-weight: 600 !important;\n}\n.fw-700 {\n  font-weight: 700 !important;\n}\n.fw-900 {\n  font-weight: 900 !important;\n}\n.underline,\n.underline-s,\n.underline-m,\n.underline-lg {\n  height: 2px;\n  background: #C1B186;\n}\n.underline-s {\n  width: 60px;\n}\n.underline-m {\n  width: 90px;\n}\n.underline-lg {\n  width: 120px;\n}\na,\n.link {\n  color: #C1B186;\n  font-weight: 600;\n  text-decoration: none;\n  -webkit-transition: color 0.3s;\n  -moz-transition: color 0.3s;\n  transition: color 0.3s;\n}\na:hover,\n.link:hover {\n  color: #DED1C2;\n  text-decoration: none;\n}\na:hover,\n.link:hover,\na:active,\n.link:active,\na:focus,\n.link:focus {\n  text-decoration: none;\n}\nhtml,\nbody {\n  width: 100%;\n  height: 100%;\n  color: #383838;\n  background-color: #F5F5F5;\n  font-size: 16px;\n  font-weight: 400;\n  text-rendering: optimizeLegibility;\n  -webkit-font-smoothing: antialiased;\n  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);\n  cursor: default;\n}\n#app {\n  max-width: 1200px;\n  margin: 0 auto;\n}\n#listing-container {\n  display: grid;\n  grid-template-columns: 200px 800px 200px;\n  grid-gap: 15px;\n}\n#listing-container #listings .listing {\n  border: 1px solid #383838;\n}\n#listing-container #listings .listing span {\n  font-weight: 600 !important;\n}\n.section-title {\n  font-size: 1.3125em;\n  font-weight: 300;\n  font-weight: 600 !important;\n  font-family: 'Open Sans', sans-serif;\n}\n", ""]);
+exports.push([module.i, ".margin-0 {\n  margin: 0 !important;\n}\n.margin-xs {\n  margin: 2px;\n}\n.margin-s {\n  margin: 5px;\n}\n.margin-m {\n  margin: 10px;\n}\n.margin {\n  margin: 15px;\n}\n.margin-lg {\n  margin: 30px;\n}\n.margin-xl {\n  margin: 45px;\n}\n.margin-top-0 {\n  margin-top: 0 !important;\n}\n.margin-top-xs {\n  margin-top: 2px;\n}\n.margin-top-s,\n.underline,\n.underline-s,\n.underline-m,\n.underline-lg {\n  margin-top: 5px;\n}\n.margin-top-m {\n  margin-top: 10px;\n}\n.margin-top {\n  margin-top: 15px;\n}\n.margin-top-lg {\n  margin-top: 30px;\n}\n.margin-top-xl {\n  margin-top: 45px;\n}\n.margin-right-0 {\n  margin-right: 0 !important;\n}\n.margin-right-xs {\n  margin-right: 2px;\n}\n.margin-right-s {\n  margin-right: 5px;\n}\n.margin-right-m {\n  margin-right: 10px;\n}\n.margin-right {\n  margin-right: 15px;\n}\n.margin-right-lg {\n  margin-right: 30px;\n}\n.margin-right-xl {\n  margin-right: 45px;\n}\n.margin-bottom-0 {\n  margin-bottom: 0 !important;\n}\n.margin-bottom-xs {\n  margin-bottom: 2px;\n}\n.margin-bottom-s {\n  margin-bottom: 5px;\n}\n.margin-bottom-m,\n.underline,\n.underline-s,\n.underline-m,\n.underline-lg {\n  margin-bottom: 10px;\n}\n.margin-bottom {\n  margin-bottom: 15px;\n}\n.margin-bottom-lg {\n  margin-bottom: 30px;\n}\n.margin-bottom-xl {\n  margin-bottom: 45px;\n}\n.margin-left-0 {\n  margin-left: 0 !important;\n}\n.margin-left-xs {\n  margin-left: 2px;\n}\n.margin-left-s {\n  margin-left: 5px;\n}\n.margin-left-m {\n  margin-left: 10px;\n}\n.margin-left {\n  margin-left: 15px;\n}\n.margin-left-lg {\n  margin-left: 30px;\n}\n.margin-left-xl {\n  margin-left: 45px;\n}\n.padding-xs {\n  padding: 2px;\n}\n.padding-s {\n  padding: 5px;\n}\n.padding-m {\n  padding: 10px;\n}\n.padding {\n  padding: 15px;\n}\n.padding-lg {\n  padding: 30px;\n}\n.padding-xl {\n  padding: 45px;\n}\n.padding-top-xs {\n  padding-top: 2px;\n}\n.padding-top-s {\n  padding-top: 5px;\n}\n.padding-top-m {\n  padding-top: 10px;\n}\n.padding-top {\n  padding-top: 15px;\n}\n.padding-top-lg {\n  padding-top: 30px;\n}\n.padding-top-xl {\n  padding-top: 45px;\n}\n.padding-right-xs {\n  padding-right: 2px;\n}\n.padding-right-s {\n  padding-right: 5px;\n}\n.padding-right-m {\n  padding-right: 10px;\n}\n.padding-right {\n  padding-right: 15px;\n}\n.padding-right-lg {\n  padding-right: 30px;\n}\n.padding-right-xl {\n  padding-right: 45px;\n}\n.padding-bottom-xs {\n  padding-bottom: 2px;\n}\n.padding-bottom-s {\n  padding-bottom: 5px;\n}\n.padding-bottom-m {\n  padding-bottom: 10px;\n}\n.padding-bottom {\n  padding-bottom: 15px;\n}\n.padding-bottom-lg {\n  padding-bottom: 30px;\n}\n.padding-bottom-xl {\n  padding-bottom: 45px;\n}\n.padding-left-xs {\n  padding-left: 2px;\n}\n.padding-left-s {\n  padding-left: 5px;\n}\n.padding-left-m {\n  padding-left: 10px;\n}\n.padding-left {\n  padding-left: 15px;\n}\n.padding-left-lg {\n  padding-left: 30px;\n}\n.padding-left-xl {\n  padding-left: 45px;\n}\n/*\n * .generate-color-schema(@colorName, @colorValue)\n *\n *   Generates a set of classes for a given color variable.\n *\n *   Usage:\n *\n *     @b0: #070A0D;\n *     .generate-color-schema(b0, @b0);\n *\n *   Results in the following classes:\n *\n *     .text-b0 { color: #070A0D; }\n *     .bg-b0 { background-color: #070A0D; }\n */\n.text-white {\n  color: white;\n}\n.text-black {\n  color: black;\n}\n.bg-white {\n  background: white;\n}\n.bg-black {\n  background: black;\n}\n.text-gld {\n  color: #C1B186;\n}\n.bg-gld {\n  background-color: #C1B186;\n}\n.text-slk {\n  color: #DED1C2;\n}\n.bg-slk {\n  background-color: #DED1C2;\n}\n.text-ppr {\n  color: #F5F5F5;\n}\n.bg-ppr {\n  background-color: #F5F5F5;\n}\n.text-chr {\n  color: #383838;\n}\n.bg-chr {\n  background-color: #383838;\n}\n.inline {\n  display: inline;\n}\n.inline-block {\n  display: inline-block;\n}\n.table {\n  display: table;\n}\n.fixed {\n  position: fixed !important;\n}\n.absolute {\n  position: absolute !important;\n}\n.relative {\n  position: relative !important;\n}\n.center-content {\n  display: flex;\n  justify-content: center;\n}\n.align-vertical {\n  display: table-cell;\n  vertical-align: middle;\n}\n.vertically-center {\n  position: relative;\n  transform: translateY(-50%);\n  top: 50%;\n}\n.flip-vertical {\n  transform: rotate(180deg);\n}\n.overflow-ellipses {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.radius-xs {\n  border-radius: 2px;\n}\n.radius-s {\n  border-radius: 5px;\n}\n.radius {\n  border-radius: 15px;\n}\n.radius-s-top {\n  border-top-left-radius: 5px;\n  border-top-right-radius: 5px;\n}\n.radius-s-bottom {\n  border-bottom-left-radius: 5px;\n  border-bottom-right-radius: 5px;\n}\n.box-shadow {\n  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);\n}\n.box-shadow-light {\n  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);\n}\n/*! normalize.css v3.0.1 | MIT License | git.io/normalize */\n* {\n  box-sizing: border-box;\n}\nhtml {\n  size-adjust: 100%;\n}\nbody {\n  margin: 0;\n}\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nnav,\nsection,\nsummary {\n  display: block;\n}\naudio,\ncanvas,\nprogress,\nvideo {\n  display: inline-block;\n  vertical-align: baseline;\n}\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n[hidden],\ntemplate {\n  display: none;\n}\na {\n  background: transparent;\n}\na:active,\na:hover {\n  outline: 0;\n  cursor: pointer;\n}\nabbr[title] {\n  border-bottom: 1px dotted;\n}\nabbr {\n  text-decoration: none;\n  border-bottom: 0;\n}\nb,\nstrong {\n  font-weight: bold;\n}\ndfn {\n  font-style: italic;\n}\nmark {\n  background: #ff0;\n  color: #000;\n}\nsmall {\n  font-size: 80%;\n}\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\nsup {\n  top: -0.5em;\n}\nsub {\n  bottom: -0.25em;\n}\nimg {\n  border: 0;\n}\nsvg:not(:root) {\n  overflow: hidden;\n}\nfigure {\n  margin: 1em 40px;\n}\nhr {\n  box-sizing: content-box;\n  height: 0;\n}\npre {\n  overflow: auto;\n}\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, monospace;\n  font-size: 1em;\n}\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  color: inherit;\n  font: inherit;\n  margin: 0;\n}\nbutton {\n  overflow: visible;\n}\nbutton:hover,\nbutton:focus {\n  cursor: pointer;\n}\nbutton,\nselect {\n  text-transform: none;\n}\nbutton,\nhtml input[type=\"button\"] {\n  appearance: button;\n  cursor: pointer;\n}\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default;\n}\nbutton input::focus-inner {\n  border: 0;\n  padding: 0;\n}\ninput {\n  line-height: normal;\n}\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  appearance: button;\n  cursor: pointer;\n}\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  box-sizing: border-box;\n  padding: 0;\n}\ninput[type=\"number\"]::inner-spin-button,\ninput[type=\"number\"]::outer-spin-button {\n  height: auto;\n}\ninput[type=\"search\"] {\n  box-sizing: border-box;\n  -webkit-appearance: none;\n  appearance: none;\n}\ninput[type=\"search\"]::search-cancel-button,\ninput[type=\"search\"]::search-decoration {\n  -webkit-appearance: none;\n  appearance: none;\n}\nfieldset {\n  border: 1px solid #c0c0c0;\n  margin: 0 2px;\n  padding: 0.35em 0.625em 0.75em;\n}\nlegend {\n  border: 0;\n  padding: 0;\n}\ntextarea {\n  overflow: auto;\n}\noptgroup {\n  font-weight: bold;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\ntd,\nth {\n  padding: 0;\n}\nul,\nli {\n  margin: 0;\n  padding: 0;\n}\n.lato,\nhtml,\nbody {\n  font-family: 'Lato', sans-serif;\n  letter-spacing: .9px;\n}\n.open-sans {\n  font-family: 'Open Sans', sans-serif;\n}\nh1,\n.h1 {\n  font-size: 3em;\n  font-weight: 300;\n}\nh2,\n.h2 {\n  font-size: 2.25em;\n  font-weight: 300;\n}\nh3,\n.h3 {\n  font-size: 1.75em;\n  font-weight: 300;\n}\nh4,\n.h4 {\n  font-size: 1.3125em;\n  font-weight: 300;\n}\nh5,\n.h5 {\n  font-size: 1.125em;\n  font-weight: 300;\n}\nh6,\n.h6 {\n  font-size: 1em;\n  font-weight: 300;\n}\nh1 {\n  margin-bottom: .5em;\n  line-height: 1em;\n}\nh2 {\n  margin-bottom: 0.6666666667em;\n  line-height: 1.33333333em;\n}\nh3 {\n  margin-bottom: 1em;\n  line-height: 1em;\n}\nh4 {\n  margin-bottom: 1.1428571429em;\n  line-height: 1.14285714em;\n}\nh5 {\n  margin-bottom: 1.3333333333em;\n  line-height: 2.66666667em;\n}\nh6 {\n  margin-bottom: 1.7142857143em;\n  line-height: 1.5em;\n}\nsmall,\n.small {\n  font-size: 0.85em;\n}\n.xsmall {\n  font-size: 0.75em;\n}\np {\n  font-size: 1em;\n  line-height: 1.5em;\n  margin-bottom: 1.5em;\n  font-weight: 400;\n}\np:last-child {\n  margin: 0;\n}\n.italic {\n  font-style: italic;\n}\n.uppercase {\n  text-transform: uppercase;\n}\n.text-center {\n  text-align: center;\n}\nstrong,\n.strong {\n  font-weight: 900;\n}\n.fw-100 {\n  font-weight: 100 !important;\n}\n.fw-300 {\n  font-weight: 300 !important;\n}\n.fw-400 {\n  font-weight: 400 !important;\n}\n.fw-600 {\n  font-weight: 600 !important;\n}\n.fw-700 {\n  font-weight: 700 !important;\n}\n.fw-900 {\n  font-weight: 900 !important;\n}\n.underline,\n.underline-s,\n.underline-m,\n.underline-lg {\n  height: 2px;\n  background: #C1B186;\n}\n.underline-s {\n  width: 60px;\n}\n.underline-m {\n  width: 90px;\n}\n.underline-lg {\n  width: 120px;\n}\na,\n.link {\n  color: #C1B186;\n  font-weight: 600;\n  text-decoration: none;\n  -webkit-transition: color 0.3s;\n  -moz-transition: color 0.3s;\n  transition: color 0.3s;\n}\na:hover,\n.link:hover {\n  color: #DED1C2;\n  text-decoration: none;\n}\na:hover,\n.link:hover,\na:active,\n.link:active,\na:focus,\n.link:focus {\n  text-decoration: none;\n}\nhtml,\nbody {\n  width: 100%;\n  height: 100%;\n  color: #383838;\n  background-color: #F5F5F5;\n  font-size: 16px;\n  font-weight: 400;\n  text-rendering: optimizeLegibility;\n  -webkit-font-smoothing: antialiased;\n  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);\n  cursor: default;\n}\n#app {\n  max-width: 1200px;\n  margin: 0 auto;\n}\n#listing-container {\n  display: grid;\n  grid-template-columns: 200px 800px 200px;\n  grid-gap: 15px;\n}\n#listing-container #listings .listing {\n  border: 1px solid #383838;\n  border-radius: 2px;\n}\n#listing-container #listings .listing span {\n  font-weight: 600 !important;\n}\n.section-title {\n  font-size: 1.3125em;\n  font-weight: 300;\n  font-weight: 600 !important;\n  font-family: 'Open Sans', sans-serif;\n}\nselect {\n  width: 100%;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 /* 30 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -18623,7 +18717,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(31);
+var	fixUrls = __webpack_require__(32);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -18939,7 +19033,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 
@@ -19033,87 +19127,6 @@ module.exports = function (css) {
 };
 
 
-/***/ }),
-/* 32 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
 /***/ })
 /******/ ]);
+//# sourceMappingURL=bundle.js.map

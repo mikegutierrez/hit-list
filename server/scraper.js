@@ -1,12 +1,14 @@
 const cheerio = require('cheerio');
 const phantom = require('phantom');
 const moment = require('moment');
+const colors = require('colors');
 
 let lastRequest;
 let savedData = [];
 
 const scrapeController = {
   getData: (req, res) => {
+    console.log('Scraping...'.green);
     if (savedData.length && Date.now() - lastRequest < 300000) {
       return new Promise((resolve, reject) => {
         res.send(savedData);
@@ -25,11 +27,15 @@ const scrapeController = {
         const content = await page.property('content');
         const $ = cheerio.load(content);
 
+        const venue = (input) => {
+          return input === 'null' ? 'Not Listed' : input;
+        };
+
         $('.in').map((idx, elem) => {
           const listing = {};
           listing.headliner = $(elem).find('.show-info > h1 > a').text();
           listing.support = $(elem).find('.show-info > .support').text() || 'Not Listed';
-          listing.venue = $(elem).find('.show-info > .venue').text().split(',')[0];
+          listing.venue = venue($(elem).find('.show-info > .venue').text().split(',')[0]);
           listing.city = $(elem).find('.show-info > .venue').text().split(',')[1].trim();
           listing.state = $(elem).find('.show-info > .venue').text().split(',')[2].trim();
           listing.date = moment($(elem).find('.show-info > .date').text().split(',')[0]).format('YYYY-MM-DD');
@@ -108,7 +114,7 @@ const scrapeController = {
           const dateB = moment(b.date);
           return dateA - dateB;
         });
-        console.log('Scrape complete');
+        console.log('Scrape complete'.rainbow);
         savedData = sortedOutput;
         resolve(savedData);
       }))).catch(err => console.error(`Error: ${err.message}`));

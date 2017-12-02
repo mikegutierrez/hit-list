@@ -8,6 +8,7 @@ class App extends Component {
       listings: [],
       filteredList: [],
       selectedLocation: 'California',
+      selectedVenue: '',
     };
     this.getSelectedData = this.getSelectedData.bind(this);
     this.filterData = this.filterData.bind(this);
@@ -26,19 +27,27 @@ class App extends Component {
   }
 
   getSelectedData(selection) {
-    const { listings } = this.state;
-    return listings.map(listing => listing[selection]).sort().filter((itm, pos, arr) => {
+    const { listings, filteredList } = this.state;
+    const mapList = () => {
+      if (selection === 'venue' && filteredList.length) return filteredList;
+      return listings;
+    };
+    return mapList().map(listing => listing[selection]).sort().filter((itm, pos, arr) => {
       return !pos || itm !== arr[pos - 1];
     });
   }
 
   filterData(event, selection) {
-    console.log('selection:  ', selection);
     const { listings } = this.state;
     const filter = listings.filter((listing) => {
       return listing[selection] === event.target.value;
     });
-    this.setState({ filteredList: filter, selectedLocation: selection === 'city' ? event.target.value : filter[0].city });
+    const displayLocation = () => {
+      if (selection === 'city') return event.target.value;
+      if (!filter.length) return 'California';
+      return filter[0].city;
+    };
+    this.setState({ filteredList: filter, selectedLocation: displayLocation(), selectedVenue: event.target.value });
   }
 
   mapListings(selection) {
@@ -58,8 +67,9 @@ class App extends Component {
   }
 
   renderSelect(selection, title) {
+    const selectValue = selection === 'city' ? this.state.selectedLocation : this.state.selectedVenue;
     return (
-      <select id={`filter-${selection}`} onChange={event => this.filterData(event, selection)} className="margin-bottom">
+      <select id={`filter-${selection}`} onChange={event => this.filterData(event, selection)} className="margin-bottom" value={selectValue}>
         <option value="California">{`All ${title}`}</option>
         {this.getSelectedData(selection).map((selection, idx) => <option key={idx} value={selection}>{selection}</option>)}
       </select>

@@ -8,6 +8,7 @@ module.exports = {
     publicPath: '/build/',
     filename: 'bundle.js',
   },
+  devtool: 'source-map',
   devServer: {
     contentBase: path.join(__dirname, 'build'),
     hot: true,
