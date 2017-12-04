@@ -34390,9 +34390,9 @@ var App = function (_Component) {
 
       var globalFavorites = [].concat(_toConsumableArray(favorites));
 
-      event.target.classList.toggle('favoriteListing');
+      event.target.classList.toggle('favoriteListing'); // this only handles class for current render. will lose class upon filtering
 
-      // TODO: if object already in favorites, remove. else add it. 
+      // TODO: if object already in favorites, remove. else add it.
       // if (favorites.filter(obj => obj.headliner === data.headliner)) {
       //   // const index = favorites.indexOf(obj);
       //   // globalFavorites.splice(index, 1);
