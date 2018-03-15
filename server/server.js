@@ -8,7 +8,7 @@ const colors = require('colors');
 const app = express();
 const PORT = 8080;
 
-mongoose.connect('mongodb://localhost:27017/hitlist');
+mongoose.connect('mongodb://admin:admin1@ds231568.mlab.com:31568/hitlist');
 
 app.use(express.static(path.join(__dirname, './../')));
 

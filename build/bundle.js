@@ -34244,13 +34244,6 @@ var App = function (_Component) {
       selectedVenue: '',
       favorites: []
     };
-    _this.getSelectedData = _this.getSelectedData.bind(_this);
-    _this.filterData = _this.filterData.bind(_this);
-    _this.mapListings = _this.mapListings.bind(_this);
-    _this.renderSelect = _this.renderSelect.bind(_this);
-    _this.renderStar = _this.renderStar.bind(_this);
-    _this.addToFavorites = _this.addToFavorites.bind(_this);
-    _this.renderFavorites = _this.renderFavorites.bind(_this);
     return _this;
   }
 

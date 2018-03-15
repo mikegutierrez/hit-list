@@ -12,13 +12,6 @@ class App extends Component {
       selectedVenue: '',
       favorites: [],
     };
-    this.getSelectedData = this.getSelectedData.bind(this);
-    this.filterData = this.filterData.bind(this);
-    this.mapListings = this.mapListings.bind(this);
-    this.renderSelect = this.renderSelect.bind(this);
-    this.renderStar = this.renderStar.bind(this);
-    this.addToFavorites = this.addToFavorites.bind(this);
-    this.renderFavorites = this.renderFavorites.bind(this);
   }
 
   componentDidMount() {
